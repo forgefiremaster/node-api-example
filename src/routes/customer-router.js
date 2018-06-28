@@ -14,4 +14,7 @@ router.post('/', authService.authorize, controller.post);
 //authenticate
 router.post('/authenticate', controller.authenticate)
 
+//refreshToken
+router.post('/refresh-token', authService.authorize, controller.refreshToken)
+
 module.exports = router;

@@ -59,11 +59,43 @@ exports.authenticate = async (req, res, next) => {
     }
 
     const token = await authService.generateToken({
+      id : customer._id,
       email : customer.email,
       name : customer.name
      });
 
     return res.status(201).send({token : token, data : {name : customer.name, email : customer.email}});
+  } catch (e) {
+    return res.status(500).send({message : 'Falha na requisição', data : e});
+  } finally {
+    console.log('create customer');
+  }
+};
+
+exports.refreshToken = async (req, res, next) => {
+  try {
+
+    //recuperar token antes de criar um Cliente - primeiro garanta queo tken é válido
+    const token = req.body.token || req.query.token || req.headers['authorization'];
+
+    const data = await authService.decodeToken(token);
+
+    const customer = await repository.getById(data.id);
+
+    if (!customer) {
+      res.status(401).send({
+        message : 'Cliente não encontrado.'
+      })
+      return;
+    }
+
+    const tokenData = await authService.generateToken({
+      id : customer._id,
+      email : customer.email,
+      name : customer.name
+     });
+
+    return res.status(201).send({token : tokenData, data : {name : customer.name, email : customer.email}});
   } catch (e) {
     return res.status(500).send({message : 'Falha na requisição', data : e});
   } finally {

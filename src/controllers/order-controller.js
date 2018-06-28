@@ -2,6 +2,7 @@
 
 const ValidationContract = require('../validators/fluent-validator');
 const repository = require('../repositories/order-repository');
+const authService = require('../services/auth-service');
 const guid = require('guid');
 
 exports.get = async (req, res, next) => {
@@ -18,8 +19,15 @@ exports.get = async (req, res, next) => {
 
 exports.post = async (req, res, next) => {
   try {
+
+    //recuperar token antes de criar um Cliente
+    const token = req.body.token || req.query.token || req.headers['authorization'];
+
+    //Decodifica token
+    const data = await authService.decodeToken(token);
+
     await repository.create({
-      customer : req.body.customer,
+      customer : data.id,
       number : guid.raw().substring(0, 6),
       items : req.body.items
     });
