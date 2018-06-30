@@ -49,15 +49,15 @@ exports.post = async (req, res, next) =>{
   let contract = new ValidationContract();
 
   //Validadores
-  //contract.hasMinLen(req.body.title, 3 , 'O título deve ter pelo menos 3 caracteres.');
-  //contract.hasMinLen(req.body.slug, 3 , 'O slug deve ter pelo menos 3 caracteres.');
-  //contract.hasMinLen(req.body.description, 3 , 'A description deve ter pelo menos 3 caracteres.');
+  contract.hasMinLen(req.body.title, 3 , 'O título deve ter pelo menos 3 caracteres.');
+  contract.hasMinLen(req.body.slug, 3 , 'O slug deve ter pelo menos 3 caracteres.');
+  contract.hasMinLen(req.body.description, 3 , 'A description deve ter pelo menos 3 caracteres.');
 
   //Se os dados forem válidos
-  //if (!contract.isValid()) {
-  //  res.status(400).send(contract.errors()).end();
-  //  return;
-  //}
+  if (!contract.isValid()) {
+   res.status(400).send(contract.errors()).end();
+   return;
+  }
 
   try {
     await repository.create(req.body);

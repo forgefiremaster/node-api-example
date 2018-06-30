@@ -11,6 +11,8 @@ exports.decodeToken = async (token) => {
   return data;
 };
 
+
+//Interceptadores
 exports.authorize = function (req, res, next) {
   var token = req.body.token || req.query.token || req.headers['authorization'];
 
@@ -25,4 +27,32 @@ exports.authorize = function (req, res, next) {
       }
     });
   }
-;}
+}
+
+//função que define se usário é admin ou não
+exports.isAdmin = function(req, res, next) {
+  let token = req.body.token || req.headers['authorization'] || req.query.token;
+
+  if (!token) {
+    res.status(401).send({
+      message : 'Token inválido'
+    });
+  } else {
+
+    jwt.verify(token, global.SALT_KEY, function(error, decoded){
+      if(error){
+        res.status(400).send({
+          message : 'Token inváĺido'
+        });
+      } else {
+        if(decoded.roles.includes('admin')){
+          next();
+        }else {
+          res.status(403).json({
+            message : 'Esta funcionalidade é estritamente para administrador.'
+          });
+        }
+      }
+    });
+  }
+};

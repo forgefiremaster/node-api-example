@@ -1,54 +1,47 @@
-'use-strict'
-
-//Estes validadores servem de contrato para validar o body das requisiçoes http
+'use strict';
 
 let errors = [];
 
-function ValidationContract(){
-  errors = [];
+function ValidationContract() {
+    errors = [];
 }
 
-ValidationContract.prototype.isRequired = (values, message) => {
-  if (!values || value.lenght <= 0) {
-      errors.push({message : message});
-  }
+ValidationContract.prototype.isRequired = (value, message) => {
+    if (!value || value.length <= 0)
+        errors.push({ message: message });
 }
 
-  ValidationContract.prototype.hasMinLen = (values, min, message) => {
-    if (!values || values.lenght < min) {
-      errors.push({message : message});
-    }
-  }
+ValidationContract.prototype.hasMinLen = (value, min, message) => {
+    if (!value || value.length < min)
+        errors.push({ message: message });
+}
 
-  ValidationContract.prototype.hasMaxLen = (values, max, message) => {
-    if (!values || values.lenght > max) {
-      errors.push({message : message});
-    }
-  }
+ValidationContract.prototype.hasMaxLen = (value, max, message) => {
+    if (!value || value.length > max)
+        errors.push({ message: message });
+}
 
-  ValidationContract.prototype.isFixedLen = (values, len, message) => {
-    if (values.lenght != len) {
-      errors.push({message : message});
-    }
-  }
+ValidationContract.prototype.isFixedLen = (value, len, message) => {
+    if (value.length != len)
+        errors.push({ message: message });
+}
 
-  ValidationContract.prototype.isEmail = (values, message) => {
-    var reg = new RegExp(/^\w+([-+.']\w+) * @\w+([-.]\w)*\.\w+([-.]\w)*$/)
-    if (reg.test(value)) {
-      errors.push({message : message});
-    }
-  }
+ValidationContract.prototype.isEmail = (value, message) => {
+    var reg = new RegExp(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/);
+    if (!reg.test(value))
+        errors.push({ message: message });
+}
 
 ValidationContract.prototype.errors = () => {
-  return errors;
+    return errors;
 }
 
 ValidationContract.prototype.clear = () => {
-  errors = [];
+    errors = [];
 }
 
 ValidationContract.prototype.isValid = () => {
-  return errors.lenght == 0;
+    return errors.length == 0;
 }
 
 module.exports = ValidationContract;

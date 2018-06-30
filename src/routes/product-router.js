@@ -18,12 +18,12 @@ router.get('/admin/:id', authService.authorize, controller.getById);
 router.get('/tags/:tag', authService.authorize, controller.getByTag);
 
 //POST
-router.post('/', authService.authorize, controller.post);
+router.post('/', authService.isAdmin, controller.post); //Apenas amins podem alterar os produtos
 
 //PUT
-router.put('/:id', authService.authorize, controller.put);
+router.put('/:id', authService.isAdmin, controller.put);  //Apenas amins podem alterar os produtos
 
 //DELETE
-router.delete('/', authService.authorize, controller.delete);
+router.delete('/', authService.isAdmin, controller.delete);  //Apenas amins podem alterar os produtos
 
 module.exports = router;

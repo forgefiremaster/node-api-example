@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Customer = mongoose.model('Customer');
 
 exports.get = async() => {
- const res = await Customer.find({}, 'name email');
+ const res = await Customer.find({}, 'name email roles');
  return res;
 }
 
@@ -24,4 +24,8 @@ exports.authenticate = async(data) => {
 exports.getById = async(id) => {
  const res = await Customer.findById(id);
  return res;
+}
+
+exports.delete = async (id) => {
+  return await Customer.findOneAndRemove(id);
 }

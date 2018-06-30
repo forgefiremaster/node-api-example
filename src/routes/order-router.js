@@ -6,15 +6,15 @@ const controller = require('../controllers/order-controller');
 const authService = require('../services/auth-service');
 
 //GET
-router.get('/', authService.authorize, controller.get);
+router.get('/', authService.isAdmin, controller.get);
 
 //POST
-router.post('/', authService.authorize, controller.post);
+router.post('/', authService.isAdmin, controller.post);
 
 //PUT
-router.put('/:id', authService.authorize, controller.put);
+router.put('/:id', authService.isAdmin, controller.put);
 
 //DELETE
-router.delete('/', authService.authorize, controller.delete);
+router.delete('/', authService.isAdmin, controller.delete);
 
 module.exports = router;

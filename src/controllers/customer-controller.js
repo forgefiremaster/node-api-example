@@ -34,7 +34,8 @@ exports.post = async (req, res, next) => {
     await repository.create({
       name : req.body.name,
       email : req.body.email,
-      password : md5(req.body.password + global.SALT_KEY)
+      password : md5(req.body.password + global.SALT_KEY),
+      roles : ["user"]
     });
     return res.status(201).send({message : 'Cliente cadastrado com sucesso.'});
   } catch (e) {
@@ -44,6 +45,7 @@ exports.post = async (req, res, next) => {
   }
 };
 
+//Gerar token para usário
 exports.authenticate = async (req, res, next) => {
   try {
     const customer = await repository.authenticate({
@@ -61,7 +63,8 @@ exports.authenticate = async (req, res, next) => {
     const token = await authService.generateToken({
       id : customer._id,
       email : customer.email,
-      name : customer.name
+      name : customer.name,
+      roles : customer.roles
      });
 
     return res.status(201).send({token : token, data : {name : customer.name, email : customer.email}});
@@ -72,6 +75,7 @@ exports.authenticate = async (req, res, next) => {
   }
 };
 
+//Refresh token
 exports.refreshToken = async (req, res, next) => {
   try {
 
@@ -92,7 +96,8 @@ exports.refreshToken = async (req, res, next) => {
     const tokenData = await authService.generateToken({
       id : customer._id,
       email : customer.email,
-      name : customer.name
+      name : customer.name,
+      roles : customer.roles
      });
 
     return res.status(201).send({token : tokenData, data : {name : customer.name, email : customer.email}});
@@ -102,3 +107,14 @@ exports.refreshToken = async (req, res, next) => {
     console.log('create customer');
   }
 };
+
+exports.delete = async(req, res, next) => {
+  try {
+    await repository.delete(req.body.id);
+    return res.status(200).send({message : 'Cliente removido com sucess.'});
+  } catch (e) {
+    return res.status(400).send({message : 'Erro ao remover o cliente.'});
+  } finally {
+    console.log('delete cliente');
+  }
+}
